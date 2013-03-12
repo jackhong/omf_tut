@@ -1,0 +1,13 @@
+@startuml
+
+title: Resource proxy handles FRCP messages
+
+[-> "Resource proxy": REQUEST message via PubSub
+note left: request property foo of the proxy
+
+"Resource proxy" -> "Resource proxy": Internal execute request_foo()
+
+[<- "Resource proxy": INFORM message via PubSub
+note left: inform with the value of property foo
+
+@enduml
