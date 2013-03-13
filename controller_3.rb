@@ -45,7 +45,7 @@ end
 OmfCommon.init(:development, communication: { url: 'xmpp://delta:pw@localhost' }) do
   OmfCommon.comm.on_connected do |comm|
     info "Garage controoler >> Connected to XMPP server"
-    garage = OmfRc::ResourceFactory.new(:garage, uid: 'garage', hrn: 'my_garage')
+    garage = OmfRc::ResourceFactory.create(:garage, uid: 'garage', hrn: 'my_garage')
     comm.on_interrupted { garage.disconnect }
   end
 end

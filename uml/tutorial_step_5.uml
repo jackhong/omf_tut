@@ -1,0 +1,31 @@
+@startuml
+
+title: Sequence of hooks execution
+
+== create ==
+
+[-> Garage: CREATE :engine
+
+Garage -> Garage: hook#before_create()
+
+Garage -> Engine: create(:engine)
+
+Engine -> Engine: hook#before_ready()
+
+Engine --> Garage: create(:engine) done
+
+Engine -> Engine: hook#after_initial_configured
+
+Garage -> Garage: hook#after_create()
+
+== release ==
+
+[-> Garage: RELEASE :engine
+
+Garage -> Engine: release(:engine)
+
+Engine -> Engine: hook#before_release()
+
+Engine --> Garage: release(:engine) done
+
+@enduml

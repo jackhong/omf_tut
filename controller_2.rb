@@ -1,6 +1,4 @@
-require 'rubygems'
 require 'omf_rc'
-require 'omf_rc/resource_factory'
 
 module OmfRc::ResourceProxy::Garage
   include OmfRc::ResourceProxyDSL
@@ -33,7 +31,7 @@ end
 OmfCommon.init(:development, communication: { url: 'xmpp://localhost' }) do
   OmfCommon.comm.on_connected do |comm|
     info "Garage controoler >> Connected to XMPP server"
-    garage = OmfRc::ResourceFactory.new(:garage, uid: 'garage')
+    garage = OmfRc::ResourceFactory.create(:garage, uid: 'garage')
     comm.on_interrupted { garage.disconnect }
   end
 end

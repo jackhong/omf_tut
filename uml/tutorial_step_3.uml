@@ -1,0 +1,19 @@
+@startuml
+
+title: Create & release engine
+
+[-> Garage: CREAET :engine
+
+Garage -> Engine: create(:engine)
+
+[<- Garage: INFORM :engine CREATION.OK
+
+...3 seconds later...
+
+[-> Garage: RELEASE :engine
+
+Garage -> Engine: release(:engine)
+
+[<- Garage: INFORM :engine RELEASED
+
+@enduml

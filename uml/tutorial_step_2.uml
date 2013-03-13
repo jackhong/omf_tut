@@ -1,0 +1,11 @@
+@startuml
+
+title: Request garage's properties
+
+[-> Garage: REQUEST :uid, :type
+
+Garage -> Garage: request_uid(), request_type()
+
+[<- Garage: INFORM uid: 'garage', type: :garage
+
+@enduml
