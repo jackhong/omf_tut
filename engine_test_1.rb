@@ -37,6 +37,13 @@ OmfCommon.init(:development, communication: { url: 'xmpp://localhost' }) do
             info "#{k} >> #{v}"
           end
         end
+
+        garage.on_message do |reply_msg|
+          reply_msg.each_property do |k, v|
+            info "#{k} >> #{v}"
+          end
+        end
+
       else
         error garage.inspect
       end

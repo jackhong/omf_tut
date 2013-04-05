@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'omf_common'
 
 def create_engine(garage)
@@ -24,13 +23,16 @@ def on_engine_created(engine)
   info "> Now we will apply 50% throttle to the engine"
   engine.configure(throttle: 50)
 
+  # Every 2 seconds, we send a request to engine, request its RPM value
+  #
   OmfCommon.eventloop.every(2) do
     engine.request([:rpm]) do |reply_msg|
       info "RPM >> #{reply_msg[:rpm]}"
     end
   end
 
-  # Some time later
+  # Some time later, we configure the throttle back to 0
+  #
   OmfCommon.eventloop.after(5) do
     info "> We want to reduce the throttle to 0"
     engine.configure(throttle: 0)
@@ -45,7 +47,7 @@ def release_engine(garage, engine)
   end
 end
 
-OmfCommon.init(:development, communication: { url: 'xmpp://lima:pw@localhost' }) do
+OmfCommon.init(:development, communication: { url: 'xmpp://localhost' }) do
   OmfCommon.comm.on_connected do |comm|
     info "Engine test script >> Connected to XMPP"
 

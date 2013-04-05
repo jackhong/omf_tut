@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'omf_common'
 
 def create_engine(garage)
@@ -27,7 +26,7 @@ def release_engine(garage, engine)
   end
 end
 
-OmfCommon.init(:development, communication: { url: 'xmpp://lima:pw@localhost' }) do
+OmfCommon.init(:development, communication: { url: 'xmpp://localhost' }) do
   OmfCommon.comm.on_connected do |comm|
     info "Engine test script >> Connected to XMPP"
 
