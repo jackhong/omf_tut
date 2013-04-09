@@ -2,6 +2,18 @@
 #
 require 'omf_common'
 
+root_cert = OmfCommon::Auth::Certificate.create(nil, 'sa', 'authority')
+
+opts = {
+  communication: {
+    url: 'xmpp://localhost',
+    auth: {
+      certs: [root_cert.to_pem_compact]
+    }
+  }
+}
+
+
 # As seen previously, this init will set up various run time options for you.
 #
 # First line simply indicates:
@@ -15,9 +27,12 @@ require 'omf_common'
 #
 # OmfCommon.eventloop returns Eventmachine runtime instance since it is default.
 #
-OmfCommon.init(:development, communication: { url: 'xmpp://localhost' }) do
+OmfCommon.init(:development, opts) do
   # Event :on_connected will be triggered when connected to XMPP server
   OmfCommon.comm.on_connected do |comm|
+
+    root_cert.create_for(OmfCommon.comm.local_address, :controller, OmfCommon.comm.local_address)
+
     info "Engine test script >> Connected to XMPP"
 
     # Subscribe to a XMPP topic represents :garage, the name was set in the controller code if you wonder.
@@ -32,15 +47,17 @@ OmfCommon.init(:development, communication: { url: 'xmpp://localhost' }) do
         #
         # Once we got the reply, simply iterate two properties and print them
         #
-        garage.request([:uid, :type]) do |reply_msg|
+        garage.request([:uid, :type, :proxies, :supported_children_type]) do |reply_msg|
           reply_msg.each_property do |k, v|
             info "#{k} >> #{v}"
           end
         end
 
         garage.on_message do |reply_msg|
-          reply_msg.each_property do |k, v|
-            info "#{k} >> #{v}"
+          if reply_msg.type == :inform
+            reply_msg.each_property do |k, v|
+              warn "#{k} >> #{v}"
+            end
           end
         end
 

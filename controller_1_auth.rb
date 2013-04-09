@@ -2,7 +2,9 @@
 #
 require 'omf_rc'
 
-root_cert = OmfCommon::Auth::Certificate.create('fake_addr', 'sa', 'authority')
+require 'pry'
+
+root_cert = OmfCommon::Auth::Certificate.create(nil, 'sa', 'authority')
 
 opts = {
   communication: {
@@ -12,9 +14,6 @@ opts = {
     }
   }
 }
-
-require 'blather'
-Blather.logger = logger
 
 # By using default namespace OmfRc::ResourceProxy, the module defined could be loaded automatically.
 #
@@ -50,7 +49,8 @@ end
 OmfCommon.init(:development, opts) do
   OmfCommon.comm.on_connected do |comm|
     info "Garage controoler >> Connected to XMPP server"
-    garage_cert = root_cert.create_for('fake_addr', 'garage', :garage)
+    garage_cert = root_cert.create_for("xmpp://garage@#{Socket.gethostname}", 'garage', :garage)
+
     garage = OmfRc::ResourceFactory.create(:garage, uid: 'garage', certificate: garage_cert)
     comm.on_interrupted { puts 'fucked up'; garage.disconnect }
   end
